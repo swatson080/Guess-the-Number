@@ -1,10 +1,4 @@
 // Simple guess the numbers game
-//
-// TODO: 
-// 	- Clean up output
-// 	- Print messages based on user performance (e.g. total guesses)
-// 		- Print messages during game 
-// 
 
 #include <iostream>
 #include <string>
@@ -12,6 +6,7 @@
 #include <sstream>
 #include <ctime>
 #include <climits>
+#include <cmath>
 
 const int EASY = 10;
 const int REGULAR = 50;
@@ -56,15 +51,17 @@ void play(int maxNumber) {
 	int randomNumber, userGuess, menuChoice;
 	// Set random number
 	randomNumber = setRandomNumber(maxNumber);
+	// Set how many guesses the user should take using log base 2
+	int guessLimit = log2(maxNumber) + 1;
 	do {
-		std::cout << "I am thinking of a number between 1 and " << maxNumber << ".\nCan you guess what my number is?" << std::endl;	
+		std::cout << "\nI am thinking of a number between 1 and " << maxNumber << ".\nCan you guess what my number is in " << guessLimit << " tries?" << std::endl;	
 		userGuess = getIntInput("Enter your guess\n>");
 		if(userGuess < 1 || userGuess > maxNumber) {
 			std::cout << "Your guess is out of range" << std::endl;
 			continue;
 		}
 		if(userGuess == randomNumber) {
-			std::cout << "Good job! " << userGuess << " is the number!\nYou guessed it in " << ++guessCount << " tries." << std::endl;
+			std::cout << userGuess << " is the number!\nYou guessed it in " << ++guessCount << " tries." << std::endl;
 		}
 		else if(userGuess > randomNumber) {
 			++guessCount;
@@ -75,6 +72,9 @@ void play(int maxNumber) {
 			std::cout << "Nice try, but my number is higher than " << userGuess << std::endl;
 		}
 	} while(userGuess != randomNumber);
+	if(guessCount <= guessLimit) {
+		std::cout << "Great job!!\n" << std::endl;
+	}
 }
 
 // Generates a random number
